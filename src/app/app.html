@@ -1,0 +1,42 @@
+<div class="app-shell">
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Inicio del inventario de equipos">
+      <span class="brand-mark" aria-hidden="true">E</span>
+      <span>Inventario <span class="brand-muted">de equipos</span></span>
+    </a>
+    <span class="course-label">COM30 · Taller 07</span>
+  </header>
+
+  <main class="main-content">
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">Gestión de recursos</p>
+      <h1 id="page-title">Inventario de equipos</h1>
+      <p class="intro-copy">
+        Consulta los equipos por código, tipo o ubicación y revisa su estado.
+      </p>
+    </section>
+
+    <section class="workspace" aria-label="Área de consulta del inventario">
+      <div class="workspace-heading">
+        <div>
+          <h2>Equipos</h2>
+          <p>El espacio de consulta estará disponible aquí.</p>
+        </div>
+        <span class="status-badge"><span aria-hidden="true"></span> Vista inicial</span>
+      </div>
+
+      <div class="empty-state">
+        <span class="empty-icon" aria-hidden="true">⌕</span>
+        <h3>El inventario se está preparando</h3>
+        <p>En los siguientes pasos se agregarán la búsqueda reactiva y los filtros.</p>
+      </div>
+    </section>
+
+    <router-outlet />
+  </main>
+
+  <footer class="footer">
+    <span>Programación con Frameworks para Web</span>
+    <span>Institución Universitaria de Barranquilla</span>
+  </footer>
+</div>
