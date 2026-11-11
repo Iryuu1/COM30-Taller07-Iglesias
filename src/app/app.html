@@ -90,6 +90,26 @@
         </div>
       </dl>
 
+      <section class="history" aria-labelledby="history-title">
+        <div class="history-heading">
+          <h3 id="history-title">Consultas recientes</h3>
+          <span>Últimas 5</span>
+        </div>
+        @if (historial().length > 0) {
+          <ul aria-live="polite">
+            @for (consulta of historial(); track $index) {
+              <li>
+                <button type="button" (click)="repetirConsulta(consulta)">
+                  {{ consulta }}
+                </button>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p>Las búsquedas realizadas aparecerán aquí.</p>
+        }
+      </section>
+
       <div class="table-scroll">
         <table>
           <thead>
