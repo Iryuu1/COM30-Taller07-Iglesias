@@ -58,6 +58,25 @@
         </p>
       </div>
 
+      <dl class="summary" aria-label="Resumen de resultados de búsqueda">
+        <div class="summary-card summary-total">
+          <dt>Coincidencias</dt>
+          <dd>{{ resumen().total }}</dd>
+        </div>
+        <div class="summary-card">
+          <dt>Activos</dt>
+          <dd>{{ resumen().activos }}</dd>
+        </div>
+        <div class="summary-card">
+          <dt>Mantenimiento</dt>
+          <dd>{{ resumen().mantenimiento }}</dd>
+        </div>
+        <div class="summary-card">
+          <dt>Baja</dt>
+          <dd>{{ resumen().bajas }}</dd>
+        </div>
+      </dl>
+
       <div class="table-scroll">
         <table>
           <thead>
