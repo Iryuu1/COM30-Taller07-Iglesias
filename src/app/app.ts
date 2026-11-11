@@ -61,4 +61,15 @@ export class App {
 
     return this.equipos().length === 0 ? 'vacio' : 'resultados';
   });
+
+  protected readonly resumen = computed(() => {
+    const equipos = this.equipos();
+
+    return {
+      total: equipos.length,
+      activos: equipos.filter((equipo) => equipo.estado === 'Activo').length,
+      mantenimiento: equipos.filter((equipo) => equipo.estado === 'Mantenimiento').length,
+      bajas: equipos.filter((equipo) => equipo.estado === 'Baja').length,
+    };
+  });
 }
