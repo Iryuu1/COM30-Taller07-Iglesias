@@ -33,8 +33,10 @@
             Buscando…
           } @else if (estadoBusqueda() === 'minimo') {
             Mínimo 2 caracteres
+          } @else if (filtroSinResultados()) {
+            0 visibles
           } @else {
-            {{ equipos().length }} resultados
+            {{ equiposVisibles().length }} visibles
           }
         </span>
       </div>
@@ -56,6 +58,17 @@
             Escribe al menos 2 caracteres para buscar.
           }
         </p>
+      </div>
+
+      <div class="filter-area">
+        <label for="filtro-estado">Filtrar por estado</label>
+        <select id="filtro-estado" [value]="filtroEstado()" (change)="cambiarFiltro($event)">
+          <option value="Todos">Todos los estados</option>
+          <option value="Activo">Activo</option>
+          <option value="Mantenimiento">Mantenimiento</option>
+          <option value="Baja">Baja</option>
+        </select>
+        <span>Este filtro se aplica a los resultados actuales.</span>
       </div>
 
       <dl class="summary" aria-label="Resumen de resultados de búsqueda">
@@ -102,7 +115,7 @@
                 </td>
               </tr>
             } @else {
-              @for (equipo of equipos(); track equipo.codigo) {
+              @for (equipo of equiposVisibles(); track equipo.codigo) {
                 <tr>
                   <td class="code-cell">{{ equipo.codigo }}</td>
                   <td>{{ equipo.tipo }}</td>
@@ -121,7 +134,11 @@
               } @empty {
                 <tr>
                   <td class="table-empty" colspan="4">
-                    No se encontraron equipos para esa búsqueda.
+                    @if (filtroSinResultados()) {
+                      No hay equipos con ese estado en los resultados actuales.
+                    } @else {
+                      No se encontraron equipos para esa búsqueda.
+                    }
                   </td>
                 </tr>
               }

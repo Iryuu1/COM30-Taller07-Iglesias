@@ -4,7 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Observable, debounceTime, distinctUntilChanged, finalize, map, of, startWith, switchMap, tap } from 'rxjs';
 import { EquipoApi } from './services/equipo-api';
-import { Equipo } from './models/equipo';
+import { Equipo, EstadoEquipo } from './models/equipo';
 
 @Component({
   imports: [ReactiveFormsModule, RouterOutlet],
@@ -16,6 +16,7 @@ export class App {
   private readonly equipoApi = inject(EquipoApi);
   protected readonly busqueda = new FormControl('', { nonNullable: true });
   protected readonly buscando = signal(false);
+  protected readonly filtroEstado = signal<'Todos' | EstadoEquipo>('Todos');
   private readonly consultaProcesada = signal('');
 
   protected readonly consultaActual = toSignal(
@@ -72,4 +73,25 @@ export class App {
       bajas: equipos.filter((equipo) => equipo.estado === 'Baja').length,
     };
   });
+
+  protected readonly equiposVisibles = computed(() => {
+    const estado = this.filtroEstado();
+    const equipos = this.equipos();
+
+    return estado === 'Todos'
+      ? equipos
+      : equipos.filter((equipo) => equipo.estado === estado);
+  });
+
+  protected readonly filtroSinResultados = computed(
+    () => this.estadoBusqueda() === 'resultados' && this.equiposVisibles().length === 0,
+  );
+
+  protected cambiarFiltro(event: Event): void {
+    const valor = (event.target as HTMLSelectElement).value;
+
+    if (valor === 'Todos' || valor === 'Activo' || valor === 'Mantenimiento' || valor === 'Baja') {
+      this.filtroEstado.set(valor);
+    }
+  }
 }
