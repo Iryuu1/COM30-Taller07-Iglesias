@@ -36,3 +36,46 @@ input,
 select {
   font: inherit;
 }
+
+.status-badge.is-loading {
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+.status-badge.is-loading span {
+  background: var(--brand);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.status-badge.is-empty {
+  background: #fff4e8;
+  color: #9a5d13;
+}
+
+.status-badge.is-empty span {
+  background: #d18a2d;
+}
+
+.loading-indicator {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 0.55rem;
+  border: 2px solid #c7ded7;
+  border-top-color: var(--brand);
+  border-radius: 50%;
+  vertical-align: -2px;
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
