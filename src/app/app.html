@@ -22,10 +22,17 @@
           <h2>Equipos</h2>
           <p>Busca por código, tipo o ubicación.</p>
         </div>
-        <span class="status-badge" aria-live="polite">
+        <span
+          class="status-badge"
+          [class.is-loading]="estadoBusqueda() === 'buscando'"
+          [class.is-empty]="estadoBusqueda() === 'vacio'"
+          aria-live="polite"
+        >
           <span aria-hidden="true"></span>
-          @if (buscando()) {
+          @if (estadoBusqueda() === 'buscando') {
             Buscando…
+          } @else if (estadoBusqueda() === 'minimo') {
+            Mínimo 2 caracteres
           } @else {
             {{ equipos().length }} resultados
           }
@@ -45,7 +52,7 @@
           />
         </label>
         <p id="search-guidance" class="search-guidance" aria-live="polite">
-          @if (consultaActual().length < 2) {
+          @if (estadoBusqueda() === 'minimo') {
             Escribe al menos 2 caracteres para buscar.
           }
         </p>
@@ -62,32 +69,43 @@
             </tr>
           </thead>
           <tbody>
-            @for (equipo of equipos(); track equipo.codigo) {
+            @if (estadoBusqueda() === 'buscando') {
               <tr>
-                <td class="code-cell">{{ equipo.codigo }}</td>
-                <td>{{ equipo.tipo }}</td>
-                <td>{{ equipo.ubicacion }}</td>
-                <td>
-                  <span
-                    class="equipment-state"
-                    [class.activo]="equipo.estado === 'Activo'"
-                    [class.mantenimiento]="equipo.estado === 'Mantenimiento'"
-                    [class.baja]="equipo.estado === 'Baja'"
-                  >
-                    <span aria-hidden="true"></span>{{ equipo.estado }}
-                  </span>
+                <td class="table-empty" colspan="4" role="status">
+                  <span class="loading-indicator" aria-hidden="true"></span>
+                  Buscando equipos…
                 </td>
               </tr>
-            } @empty {
+            } @else if (estadoBusqueda() === 'minimo') {
               <tr>
                 <td class="table-empty" colspan="4">
-                  @if (consultaActual().length < 2) {
-                    Ingresa al menos 2 caracteres para consultar el inventario.
-                  } @else {
-                    No se encontraron equipos para esa búsqueda.
-                  }
+                  Ingresa al menos 2 caracteres para consultar el inventario.
                 </td>
               </tr>
+            } @else {
+              @for (equipo of equipos(); track equipo.codigo) {
+                <tr>
+                  <td class="code-cell">{{ equipo.codigo }}</td>
+                  <td>{{ equipo.tipo }}</td>
+                  <td>{{ equipo.ubicacion }}</td>
+                  <td>
+                    <span
+                      class="equipment-state"
+                      [class.activo]="equipo.estado === 'Activo'"
+                      [class.mantenimiento]="equipo.estado === 'Mantenimiento'"
+                      [class.baja]="equipo.estado === 'Baja'"
+                    >
+                      <span aria-hidden="true"></span>{{ equipo.estado }}
+                    </span>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td class="table-empty" colspan="4">
+                    No se encontraron equipos para esa búsqueda.
+                  </td>
+                </tr>
+              }
             }
           </tbody>
         </table>

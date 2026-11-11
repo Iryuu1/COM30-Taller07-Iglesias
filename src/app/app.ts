@@ -1,8 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Observable, debounceTime, distinctUntilChanged, finalize, map, of, startWith, switchMap } from 'rxjs';
+import { Observable, debounceTime, distinctUntilChanged, finalize, map, of, startWith, switchMap, tap } from 'rxjs';
 import { EquipoApi } from './services/equipo-api';
 import { Equipo } from './models/equipo';
 
@@ -16,6 +16,7 @@ export class App {
   private readonly equipoApi = inject(EquipoApi);
   protected readonly busqueda = new FormControl('', { nonNullable: true });
   protected readonly buscando = signal(false);
+  private readonly consultaProcesada = signal('');
 
   protected readonly consultaActual = toSignal(
     this.busqueda.valueChanges.pipe(
@@ -30,6 +31,7 @@ export class App {
       map((texto) => texto.trim()),
       debounceTime(300),
       distinctUntilChanged(),
+      tap((texto) => this.consultaProcesada.set(texto)),
       startWith(this.busqueda.value),
       switchMap((texto): Observable<Equipo[]> => {
         if (texto.length < 2) {
@@ -45,4 +47,18 @@ export class App {
     ),
     { initialValue: [] },
   );
+
+  protected readonly estadoBusqueda = computed(() => {
+    const consulta = this.consultaActual();
+
+    if (consulta.length < 2) {
+      return 'minimo';
+    }
+
+    if (consulta !== this.consultaProcesada() || this.buscando()) {
+      return 'buscando';
+    }
+
+    return this.equipos().length === 0 ? 'vacio' : 'resultados';
+  });
 }
