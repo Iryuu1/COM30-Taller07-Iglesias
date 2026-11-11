@@ -20,15 +20,45 @@
       <div class="workspace-heading">
         <div>
           <h2>Equipos</h2>
-          <p>El espacio de consulta estará disponible aquí.</p>
+          <p>Listado inicial de los equipos registrados.</p>
         </div>
-        <span class="status-badge"><span aria-hidden="true"></span> Vista inicial</span>
+        <span class="status-badge"><span aria-hidden="true"></span> {{ equipos.length }} equipos</span>
       </div>
 
-      <div class="empty-state">
-        <span class="empty-icon" aria-hidden="true">⌕</span>
-        <h3>El inventario se está preparando</h3>
-        <p>En los siguientes pasos se agregarán la búsqueda reactiva y los filtros.</p>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Código</th>
+              <th scope="col">Tipo</th>
+              <th scope="col">Ubicación</th>
+              <th scope="col">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (equipo of equipos; track equipo.codigo) {
+              <tr>
+                <td class="code-cell">{{ equipo.codigo }}</td>
+                <td>{{ equipo.tipo }}</td>
+                <td>{{ equipo.ubicacion }}</td>
+                <td>
+                  <span
+                    class="equipment-state"
+                    [class.activo]="equipo.estado === 'Activo'"
+                    [class.mantenimiento]="equipo.estado === 'Mantenimiento'"
+                    [class.baja]="equipo.estado === 'Baja'"
+                  >
+                    <span aria-hidden="true"></span>{{ equipo.estado }}
+                  </span>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td class="table-empty" colspan="4">No hay equipos registrados.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
       </div>
     </section>
 
