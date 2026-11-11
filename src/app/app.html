@@ -20,9 +20,35 @@
       <div class="workspace-heading">
         <div>
           <h2>Equipos</h2>
-          <p>Listado inicial de los equipos registrados.</p>
+          <p>Busca por código, tipo o ubicación.</p>
         </div>
-        <span class="status-badge"><span aria-hidden="true"></span> {{ equipos.length }} equipos</span>
+        <span class="status-badge" aria-live="polite">
+          <span aria-hidden="true"></span>
+          @if (buscando()) {
+            Buscando…
+          } @else {
+            {{ equipos().length }} resultados
+          }
+        </span>
+      </div>
+
+      <div class="search-area">
+        <label class="search-field" for="busqueda-equipos">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input
+            id="busqueda-equipos"
+            type="search"
+            autocomplete="off"
+            [formControl]="busqueda"
+            placeholder="Ej. portátil, sala 2 o EQ-003"
+            aria-describedby="search-guidance"
+          />
+        </label>
+        <p id="search-guidance" class="search-guidance" aria-live="polite">
+          @if (consultaActual().length < 2) {
+            Escribe al menos 2 caracteres para buscar.
+          }
+        </p>
       </div>
 
       <div class="table-scroll">
@@ -36,7 +62,7 @@
             </tr>
           </thead>
           <tbody>
-            @for (equipo of equipos; track equipo.codigo) {
+            @for (equipo of equipos(); track equipo.codigo) {
               <tr>
                 <td class="code-cell">{{ equipo.codigo }}</td>
                 <td>{{ equipo.tipo }}</td>
@@ -54,7 +80,13 @@
               </tr>
             } @empty {
               <tr>
-                <td class="table-empty" colspan="4">No hay equipos registrados.</td>
+                <td class="table-empty" colspan="4">
+                  @if (consultaActual().length < 2) {
+                    Ingresa al menos 2 caracteres para consultar el inventario.
+                  } @else {
+                    No se encontraron equipos para esa búsqueda.
+                  }
+                </td>
               </tr>
             }
           </tbody>
