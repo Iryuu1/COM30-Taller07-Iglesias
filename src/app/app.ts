@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { EQUIPOS } from './data/equipos';
 
 @Component({
   imports: [RouterOutlet],
@@ -7,4 +8,6 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.css',
   templateUrl: './app.html',
 })
-export class App {}
+export class App {
+  protected readonly equipos = EQUIPOS;
+}
