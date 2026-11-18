@@ -27,12 +27,15 @@
             <th scope="col">Tipo</th>
             <th scope="col">Ubicación</th>
             <th scope="col">Estado</th>
+            <th scope="col"><span class="solo-lectores">Acciones</span></th>
           </tr>
         </thead>
         <tbody>
           @for (equipo of equipos(); track equipo.codigo) {
             <tr>
-              <td><span class="codigo">{{ equipo.codigo }}</span></td>
+              <td>
+                <a class="enlace-fila" [routerLink]="[equipo.codigo]">{{ equipo.codigo }}</a>
+              </td>
               <td>{{ equipo.tipo }}</td>
               <td>{{ equipo.ubicacion }}</td>
               <td>
@@ -45,10 +48,13 @@
                   {{ equipo.estado }}
                 </span>
               </td>
+              <td>
+                <a class="enlace-accion" [routerLink]="[equipo.codigo]">Ver ficha</a>
+              </td>
             </tr>
           } @empty {
             <tr>
-              <td class="vacio" colspan="4">Todavía no hay equipos registrados.</td>
+              <td class="vacio" colspan="5">Todavía no hay equipos registrados.</td>
             </tr>
           }
         </tbody>

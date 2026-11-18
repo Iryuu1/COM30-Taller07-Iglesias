@@ -8,4 +8,10 @@ export class EquipoApi {
 
   readonly equipos = this.equiposInternos.asReadonly();
   readonly total = computed(() => this.equiposInternos().length);
+
+  buscar(codigo: string): Equipo | undefined {
+    const buscado = codigo.trim().toUpperCase();
+
+    return this.equiposInternos().find((equipo) => equipo.codigo.toUpperCase() === buscado);
+  }
 }

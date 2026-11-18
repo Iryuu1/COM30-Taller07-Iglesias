@@ -185,6 +185,28 @@ a {
   outline-offset: 2px;
 }
 
+.enlace-accion {
+  color: var(--brand);
+  font-size: 0.82rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.enlace-accion:hover {
+  text-decoration: underline;
+}
+
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Estados */
 
 .chip-estado {
@@ -276,6 +298,10 @@ a {
   margin-bottom: 0.35rem;
   color: var(--ink);
   font-size: 1rem;
+}
+
+.detalle-vacio .boton {
+  margin-top: 1.25rem;
 }
 
 .aviso {

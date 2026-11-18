@@ -1,11 +1,66 @@
 <section class="pagina">
-  <header class="encabezado-pagina">
-    <div>
-      <p class="eyebrow">Equipos</p>
-      <h1>Detalle del equipo</h1>
-      <p class="descripcion">Esta vista mostrará la ficha completa del equipo seleccionado.</p>
-    </div>
-  </header>
+  <nav class="migas" aria-label="Ruta de navegación">
+    <a routerLink="/equipos">Equipos</a>
+    <span aria-hidden="true">/</span>
+    <span>Detalle</span>
+  </nav>
 
-  <a class="boton boton-secundario" routerLink="/equipos">Volver al listado</a>
+  @if (equipo(); as equipo) {
+    <header class="encabezado-pagina">
+      <div>
+        <p class="eyebrow">Ficha del equipo</p>
+        <h1>{{ equipo.codigo }}</h1>
+        <p class="descripcion">{{ equipo.tipo }} · {{ equipo.ubicacion }}</p>
+      </div>
+      <span
+        class="chip-estado"
+        [class.estado-activo]="equipo.estado === 'Activo'"
+        [class.estado-mantenimiento]="equipo.estado === 'Mantenimiento'"
+        [class.estado-baja]="equipo.estado === 'Baja'"
+      >
+        {{ equipo.estado }}
+      </span>
+    </header>
+
+    <section class="panel" aria-label="Datos del equipo">
+      <div class="panel-cabecera">
+        <div>
+          <h2>Datos del registro</h2>
+          <p>Información guardada en el servicio de inventario.</p>
+        </div>
+      </div>
+
+      <dl class="detalle-grid">
+        <div class="dato">
+          <dt>Código</dt>
+          <dd>{{ equipo.codigo }}</dd>
+        </div>
+        <div class="dato">
+          <dt>Tipo</dt>
+          <dd>{{ equipo.tipo }}</dd>
+        </div>
+        <div class="dato">
+          <dt>Ubicación</dt>
+          <dd>{{ equipo.ubicacion }}</dd>
+        </div>
+        <div class="dato">
+          <dt>Estado</dt>
+          <dd>{{ equipo.estado }}</dd>
+        </div>
+      </dl>
+    </section>
+
+    <div class="acciones">
+      <a class="boton boton-secundario" routerLink="/equipos">Volver al listado</a>
+      <a class="boton" routerLink="/equipos/nueva">Registrar otro equipo</a>
+    </div>
+  } @else {
+    <section class="panel vacio detalle-vacio" aria-live="polite">
+      <strong>No existe un equipo con el código «{{ codigo() }}».</strong>
+      <p>
+        La ruta del detalle sí existe, pero no hay un registro con ese código en el inventario.
+      </p>
+      <a class="boton" routerLink="/equipos">Volver al listado</a>
+    </section>
+  }
 </section>
