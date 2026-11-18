@@ -1,11 +1,90 @@
 <section class="pagina">
+  <nav class="migas" aria-label="Ruta de navegación">
+    <a routerLink="/equipos">Equipos</a>
+    <span aria-hidden="true">/</span>
+    <span>Nuevo equipo</span>
+  </nav>
+
   <header class="encabezado-pagina">
     <div>
-      <p class="eyebrow">Equipos</p>
+      <p class="eyebrow">Alta de inventario</p>
       <h1>Registrar un equipo</h1>
-      <p class="descripcion">Esta vista tendrá el formulario reactivo de alta del inventario.</p>
+      <p class="descripcion">
+        Completa los datos del equipo. El código se asigna automáticamente al guardar y te
+        llevamos a su ficha.
+      </p>
     </div>
   </header>
 
-  <a class="boton boton-secundario" routerLink="/equipos">Volver al listado</a>
+  <section class="panel" aria-label="Formulario de alta de equipo">
+    <div class="panel-cabecera">
+      <div>
+        <h2>Datos del equipo</h2>
+        <p>
+          Código que se asignará: <strong>{{ proximoCodigo() }}</strong>
+        </p>
+      </div>
+    </div>
+
+    <form class="formulario" [formGroup]="formulario" (ngSubmit)="guardar()" novalidate>
+      <div class="campo">
+        <label for="tipo">Tipo de equipo</label>
+        <input
+          id="tipo"
+          type="text"
+          formControlName="tipo"
+          list="tipos-equipo"
+          placeholder="Ej. Portátil"
+          autocomplete="off"
+        />
+        <datalist id="tipos-equipo">
+          @for (tipo of tipos; track tipo) {
+            <option [value]="tipo"></option>
+          }
+        </datalist>
+        @if (formulario.controls.tipo.touched && formulario.controls.tipo.invalid) {
+          <p class="error">Indica el tipo de equipo.</p>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="ubicacion">Ubicación</label>
+        <input
+          id="ubicacion"
+          type="text"
+          formControlName="ubicacion"
+          list="ubicaciones-equipo"
+          placeholder="Ej. Laboratorio"
+          autocomplete="off"
+        />
+        <datalist id="ubicaciones-equipo">
+          @for (ubicacion of ubicaciones; track ubicacion) {
+            <option [value]="ubicacion"></option>
+          }
+        </datalist>
+        @if (formulario.controls.ubicacion.touched && formulario.controls.ubicacion.invalid) {
+          <p class="error">Indica la ubicación del equipo.</p>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="estado">Estado</label>
+        <select id="estado" formControlName="estado">
+          @for (estado of estados; track estado) {
+            <option [value]="estado">{{ estado }}</option>
+          }
+        </select>
+      </div>
+
+      <p class="aviso">
+        Al guardar, el equipo se agrega al servicio y la aplicación navega a
+        <strong>/equipos/{{ proximoCodigo() }}</strong>.
+      </p>
+
+      <div class="acciones">
+        <button class="boton" type="submit">Guardar equipo</button>
+        <a class="boton boton-secundario" routerLink="/equipos">Cancelar</a>
+      </div>
+    </form>
+  </section>
 </section>

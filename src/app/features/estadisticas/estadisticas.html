@@ -4,11 +4,85 @@
       <p class="eyebrow">Resumen</p>
       <h1>Estadísticas del inventario</h1>
       <p class="descripcion">
-        Esta vista se carga de forma diferida y resumirá el inventario por estado, tipo y
-        ubicación.
+        Distribución de los {{ total() }} equipos registrados por estado, tipo y ubicación. Esta
+        vista se carga de forma diferida.
       </p>
     </div>
+    <a class="boton boton-secundario" routerLink="/equipos">Volver al listado</a>
   </header>
 
-  <a class="boton boton-secundario" routerLink="/equipos">Volver al listado</a>
+  <dl class="metricas" aria-label="Totales del inventario">
+    <div class="metrica">
+      <dt>Total de equipos</dt>
+      <dd>{{ total() }}</dd>
+    </div>
+    @for (fila of porEstado(); track fila.valor) {
+      <div class="metrica">
+        <dt>{{ fila.valor }}</dt>
+        <dd>{{ fila.cantidad }}</dd>
+      </div>
+    }
+  </dl>
+
+  <section class="panel" aria-label="Distribución por tipo">
+    <div class="panel-cabecera">
+      <div>
+        <h2>Por tipo</h2>
+        <p>Cantidad y porcentaje de equipos de cada tipo.</p>
+      </div>
+    </div>
+    <div class="barras">
+      @for (fila of porTipo(); track fila.valor) {
+        <div class="barra">
+          <div class="barra-cabecera">
+            <span>{{ fila.valor }}</span>
+            <strong>{{ fila.cantidad }} · {{ fila.porcentaje }}%</strong>
+          </div>
+          <div
+            class="barra-pista"
+            role="progressbar"
+            [attr.aria-label]="fila.valor"
+            [attr.aria-valuenow]="fila.porcentaje"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          >
+            <div class="barra-valor" [style.width.%]="fila.porcentaje"></div>
+          </div>
+        </div>
+      } @empty {
+        <p class="vacio">No hay equipos registrados.</p>
+      }
+    </div>
+  </section>
+
+  <section class="panel" aria-label="Distribución por ubicación">
+    <div class="panel-cabecera">
+      <div>
+        <h2>Por ubicación</h2>
+        <p>Cantidad y porcentaje de equipos en cada espacio.</p>
+      </div>
+    </div>
+    <div class="barras">
+      @for (fila of porUbicacion(); track fila.valor) {
+        <div class="barra">
+          <div class="barra-cabecera">
+            <span>{{ fila.valor }}</span>
+            <strong>{{ fila.cantidad }} · {{ fila.porcentaje }}%</strong>
+          </div>
+          <div
+            class="barra-pista"
+            role="progressbar"
+            [attr.aria-label]="fila.valor"
+            [attr.aria-valuenow]="fila.porcentaje"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          >
+            <div class="barra-valor" [style.width.%]="fila.porcentaje"></div>
+          </div>
+        </div>
+      } @empty {
+        <p class="vacio">No hay equipos registrados.</p>
+      }
+    </div>
+  </section>
 </section>
