@@ -126,6 +126,61 @@ a {
   font-size: 0.86rem;
 }
 
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 1.1rem 1.5rem;
+  border-bottom: 1px solid var(--line);
+  background: #fbfcfd;
+}
+
+.filtro {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.42rem 0.75rem;
+  border: 1px solid #d7e0e8;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 650;
+  text-decoration: none;
+  transition:
+    border-color 150ms ease,
+    color 150ms ease;
+}
+
+.filtro span {
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  background: #eef2f5;
+  color: inherit;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.filtro:hover {
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+.filtro.activo {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+.filtro.activo span {
+  background: #fff;
+}
+
+.filtro:focus-visible {
+  outline: 3px solid rgb(23 107 87 / 18%);
+  outline-offset: 1px;
+}
+
 .tabla-scroll {
   overflow-x: auto;
 }
@@ -526,7 +581,8 @@ a {
   .panel-cabecera,
   .formulario,
   .detalle-grid,
-  .barras {
+  .barras,
+  .filtros {
     padding-right: 1.1rem;
     padding-left: 1.1rem;
   }

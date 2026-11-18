@@ -15,9 +15,37 @@
     <div class="panel-cabecera">
       <div>
         <h2>Equipos</h2>
-        <p>{{ total() }} equipos registrados</p>
+        <p>
+          {{ visibles().length }} de {{ total() }} equipos
+          @if (estado(); as estadoActivo) {
+            <span>· filtro «{{ estadoActivo }}»</span>
+          }
+        </p>
       </div>
     </div>
+
+    <nav class="filtros" aria-label="Filtrar equipos por estado">
+      <a
+        class="filtro"
+        routerLink="."
+        [queryParams]="{ estado: null }"
+        [class.activo]="!estado()"
+        [attr.aria-current]="!estado() ? 'true' : null"
+      >
+        Todos <span>{{ total() }}</span>
+      </a>
+      @for (opcion of estados; track opcion) {
+        <a
+          class="filtro"
+          routerLink="."
+          [queryParams]="{ estado: opcion }"
+          [class.activo]="estado() === opcion"
+          [attr.aria-current]="estado() === opcion ? 'true' : null"
+        >
+          {{ opcion }} <span>{{ conteos()[opcion] }}</span>
+        </a>
+      }
+    </nav>
 
     <div class="tabla-scroll">
       <table class="tabla-equipos">
@@ -31,7 +59,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (equipo of equipos(); track equipo.codigo) {
+          @for (equipo of visibles(); track equipo.codigo) {
             <tr>
               <td>
                 <a class="enlace-fila" [routerLink]="[equipo.codigo]">{{ equipo.codigo }}</a>
@@ -54,7 +82,16 @@
             </tr>
           } @empty {
             <tr>
-              <td class="vacio" colspan="5">Todavía no hay equipos registrados.</td>
+              <td class="vacio" colspan="5">
+                @if (estado(); as estadoSinResultados) {
+                  <strong>0 equipos con el estado «{{ estadoSinResultados }}».</strong>
+                  No hay registros que coincidan con ese filtro.
+                  <a routerLink="." [queryParams]="{ estado: null }">Quitar filtro</a>
+                } @else {
+                  <strong>Todavía no hay equipos registrados.</strong>
+                  Registra el primer equipo para verlo en esta lista.
+                }
+              </td>
             </tr>
           }
         </tbody>
