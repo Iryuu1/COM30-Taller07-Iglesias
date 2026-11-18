@@ -1,153 +1,23 @@
 <div class="app-shell">
   <header class="topbar">
-    <a class="brand" href="/" aria-label="Inicio del inventario de equipos">
+    <a class="brand" routerLink="/" aria-label="Ir al inicio del inventario de equipos">
       <span class="brand-mark" aria-hidden="true">E</span>
       <span>Inventario <span class="brand-muted">de equipos</span></span>
     </a>
-    <span class="course-label">COM30 · Taller 07</span>
+
+    <nav class="menu" aria-label="Navegación principal">
+      <a routerLink="/" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">
+        Inicio
+      </a>
+      <a routerLink="/equipos" routerLinkActive="activo">Equipos</a>
+      <a routerLink="/equipos/nueva" routerLinkActive="activo">Nuevo equipo</a>
+      <a routerLink="/estadisticas" routerLinkActive="activo">Estadísticas</a>
+    </nav>
+
+    <span class="course-label">COM30 · Taller 08</span>
   </header>
 
   <main class="main-content">
-    <section class="intro" aria-labelledby="page-title">
-      <p class="eyebrow">Gestión de recursos</p>
-      <h1 id="page-title">Inventario de equipos</h1>
-      <p class="intro-copy">
-        Consulta los equipos por código, tipo o ubicación y revisa su estado.
-      </p>
-    </section>
-
-    <section class="workspace" aria-label="Área de consulta del inventario">
-      <div class="workspace-heading">
-        <div>
-          <h2>Equipos</h2>
-          <p>Busca por código, tipo o ubicación.</p>
-        </div>
-        <span
-          class="status-badge"
-          [class.is-loading]="estadoBusqueda() === 'buscando'"
-          [class.is-empty]="estadoBusqueda() === 'vacio'"
-          aria-live="polite"
-        >
-          <span aria-hidden="true"></span>
-          @if (estadoBusqueda() === 'buscando') {
-            Buscando…
-          } @else if (estadoBusqueda() === 'minimo') {
-            Mínimo 2 caracteres
-          } @else if (filtroSinResultados()) {
-            0 visibles
-          } @else {
-            {{ equiposVisibles().length }} visibles
-          }
-        </span>
-      </div>
-
-      <div class="search-area">
-        <label class="search-field" for="busqueda-equipos">
-          <span class="search-icon" aria-hidden="true">⌕</span>
-          <input
-            id="busqueda-equipos"
-            type="search"
-            autocomplete="off"
-            [formControl]="busqueda"
-            placeholder="Ej. portátil, sala 2 o EQ-003"
-            aria-describedby="search-guidance"
-          />
-        </label>
-        <p id="search-guidance" class="search-guidance" aria-live="polite">
-          @if (estadoBusqueda() === 'minimo') {
-            Escribe al menos 2 caracteres para buscar.
-          }
-        </p>
-      </div>
-
-      <div class="filter-area">
-        <label for="filtro-estado">Filtrar por estado</label>
-        <select id="filtro-estado" [value]="filtroEstado()" (change)="cambiarFiltro($event)">
-          <option value="Todos">Todos los estados</option>
-          <option value="Activo">Activo</option>
-          <option value="Mantenimiento">Mantenimiento</option>
-          <option value="Baja">Baja</option>
-        </select>
-        <span>Este filtro se aplica a los resultados actuales.</span>
-      </div>
-
-      <dl class="summary" aria-label="Resumen de resultados de búsqueda">
-        <div class="summary-card summary-total">
-          <dt>Coincidencias</dt>
-          <dd>{{ resumen().total }}</dd>
-        </div>
-        <div class="summary-card">
-          <dt>Activos</dt>
-          <dd>{{ resumen().activos }}</dd>
-        </div>
-        <div class="summary-card">
-          <dt>Mantenimiento</dt>
-          <dd>{{ resumen().mantenimiento }}</dd>
-        </div>
-        <div class="summary-card">
-          <dt>Baja</dt>
-          <dd>{{ resumen().bajas }}</dd>
-        </div>
-      </dl>
-
-      <div class="table-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">Código</th>
-              <th scope="col">Tipo</th>
-              <th scope="col">Ubicación</th>
-              <th scope="col">Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            @if (estadoBusqueda() === 'buscando') {
-              <tr>
-                <td class="table-empty" colspan="4" role="status">
-                  <span class="loading-indicator" aria-hidden="true"></span>
-                  Buscando equipos…
-                </td>
-              </tr>
-            } @else if (estadoBusqueda() === 'minimo') {
-              <tr>
-                <td class="table-empty" colspan="4">
-                  Ingresa al menos 2 caracteres para consultar el inventario.
-                </td>
-              </tr>
-            } @else {
-              @for (equipo of equiposVisibles(); track equipo.codigo) {
-                <tr>
-                  <td class="code-cell">{{ equipo.codigo }}</td>
-                  <td>{{ equipo.tipo }}</td>
-                  <td>{{ equipo.ubicacion }}</td>
-                  <td>
-                    <span
-                      class="equipment-state"
-                      [class.activo]="equipo.estado === 'Activo'"
-                      [class.mantenimiento]="equipo.estado === 'Mantenimiento'"
-                      [class.baja]="equipo.estado === 'Baja'"
-                    >
-                      <span aria-hidden="true"></span>{{ equipo.estado }}
-                    </span>
-                  </td>
-                </tr>
-              } @empty {
-                <tr>
-                  <td class="table-empty" colspan="4">
-                    @if (filtroSinResultados()) {
-                      No hay equipos con ese estado en los resultados actuales.
-                    } @else {
-                      No se encontraron equipos para esa búsqueda.
-                    }
-                  </td>
-                </tr>
-              }
-            }
-          </tbody>
-        </table>
-      </div>
-    </section>
-
     <router-outlet />
   </main>
 

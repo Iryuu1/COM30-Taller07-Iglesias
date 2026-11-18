@@ -1,0 +1,58 @@
+<section class="pagina">
+  <header class="encabezado-pagina">
+    <div>
+      <p class="eyebrow">Gestión de recursos</p>
+      <h1>Inventario de equipos</h1>
+      <p class="descripcion">
+        Consulta los equipos registrados, revisa su ubicación y su estado, o registra un equipo
+        nuevo en el inventario.
+      </p>
+    </div>
+    <a class="boton" routerLink="/equipos/nueva">Registrar equipo</a>
+  </header>
+
+  <section class="panel" aria-label="Listado de equipos">
+    <div class="panel-cabecera">
+      <div>
+        <h2>Equipos</h2>
+        <p>{{ total() }} equipos registrados</p>
+      </div>
+    </div>
+
+    <div class="tabla-scroll">
+      <table class="tabla-equipos">
+        <thead>
+          <tr>
+            <th scope="col">Código</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Ubicación</th>
+            <th scope="col">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (equipo of equipos(); track equipo.codigo) {
+            <tr>
+              <td><span class="codigo">{{ equipo.codigo }}</span></td>
+              <td>{{ equipo.tipo }}</td>
+              <td>{{ equipo.ubicacion }}</td>
+              <td>
+                <span
+                  class="chip-estado"
+                  [class.estado-activo]="equipo.estado === 'Activo'"
+                  [class.estado-mantenimiento]="equipo.estado === 'Mantenimiento'"
+                  [class.estado-baja]="equipo.estado === 'Baja'"
+                >
+                  {{ equipo.estado }}
+                </span>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td class="vacio" colspan="4">Todavía no hay equipos registrados.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</section>
