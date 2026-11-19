@@ -1,0 +1,120 @@
+<section class="pagina">
+  <header class="encabezado-pagina">
+    <div>
+      <p class="eyebrow">Parcial 2 · d = 2</p>
+      <h1>Solicitud validada</h1>
+      <p class="descripcion">
+        Parámetros de la fila d = 2: m = {{ M }}, tope = {{ TOPE }}. El código debe tener dos
+        letras mayúsculas y tres dígitos; la cantidad debe ser múltiplo de {{ M }} y estar entre 1
+        y {{ TOPE }}.
+      </p>
+    </div>
+  </header>
+
+  <section class="panel" aria-label="Formulario de solicitud">
+    <div class="panel-cabecera">
+      <div>
+        <h2>Datos de la solicitud</h2>
+        <p>Los mensajes aparecen después de tocar o modificar cada campo.</p>
+      </div>
+    </div>
+
+    <form class="formulario" [formGroup]="formulario" (ngSubmit)="enviar()" novalidate>
+      <div class="campo">
+        <label for="codigo">Código</label>
+        <input
+          id="codigo"
+          type="text"
+          formControlName="codigo"
+          placeholder="AB123"
+          autocomplete="off"
+          [attr.aria-invalid]="mostrarError('codigo') ? 'true' : null"
+          aria-describedby="error-codigo"
+        />
+        @if (mostrarError('codigo')) {
+          <p id="error-codigo" class="error">
+            @if (formulario.controls.codigo.hasError('required')) {
+              El código es obligatorio.
+            } @else if (formulario.controls.codigo.hasError('pattern')) {
+              Usa dos letras mayúsculas y tres dígitos (por ejemplo, AB123).
+            }
+          </p>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="cantidad">Cantidad</label>
+        <input
+          id="cantidad"
+          type="number"
+          formControlName="cantidad"
+          [attr.min]="1"
+          [attr.max]="TOPE"
+          [attr.step]="M"
+          [attr.aria-invalid]="mostrarError('cantidad') ? 'true' : null"
+          aria-describedby="error-cantidad"
+        />
+        @if (mostrarError('cantidad')) {
+          <p id="error-cantidad" class="error">
+            @if (formulario.controls.cantidad.hasError('required')) {
+              La cantidad es obligatoria.
+            }
+            @if (formulario.controls.cantidad.hasError('min')) {
+              La cantidad debe ser como mínimo 1.
+            }
+            @if (formulario.controls.cantidad.hasError('max')) {
+              La cantidad debe ser como máximo {{ TOPE }}.
+            }
+            @if (formulario.controls.cantidad.hasError('multiplo')) {
+              La cantidad debe ser múltiplo de {{ M }}.
+            }
+          </p>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="desde">Desde</label>
+        <input
+          id="desde"
+          type="number"
+          formControlName="desde"
+          [attr.aria-invalid]="mostrarError('desde') ? 'true' : null"
+          aria-describedby="error-desde"
+        />
+        @if (mostrarError('desde')) {
+          <p id="error-desde" class="error">Desde es obligatorio.</p>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="hasta">Hasta</label>
+        <input
+          id="hasta"
+          type="number"
+          formControlName="hasta"
+          [attr.aria-invalid]="mostrarError('hasta') || mostrarErrorHastaMayor() ? 'true' : null"
+          aria-describedby="error-hasta error-hasta-mayor"
+        />
+        @if (mostrarError('hasta')) {
+          <p id="error-hasta" class="error">Hasta es obligatorio.</p>
+        }
+        @if (mostrarErrorHastaMayor()) {
+          <p id="error-hasta-mayor" class="error">Hasta debe ser mayor que desde.</p>
+        }
+      </div>
+
+      @if (enviado()) {
+        <p class="aviso" role="status">
+          Formulario válido: código {{ formulario.controls.codigo.value }}, cantidad
+          {{ formulario.controls.cantidad.value }}, desde {{ formulario.controls.desde.value }} y
+          hasta {{ formulario.controls.hasta.value }}.
+        </p>
+      }
+
+      <div class="acciones">
+        <button class="boton" type="submit">Validar solicitud</button>
+        <a class="boton boton-secundario" routerLink="/equipos">Volver al inventario</a>
+      </div>
+    </form>
+  </section>
+</section>

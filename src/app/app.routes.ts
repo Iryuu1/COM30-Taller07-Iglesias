@@ -28,6 +28,12 @@ export const routes: Routes = [
     title: 'Estadísticas · Inventario',
   },
   {
+    path: 'parcial2',
+    loadChildren: () =>
+      import('./parcial2/parcial2.routes').then((modulo) => modulo.PARCIAL2_ROUTES),
+    title: 'Parcial 2 · Solicitud validada',
+  },
+  {
     path: '**',
     component: NoEncontrada,
     title: 'Página no encontrada · Inventario',
