@@ -103,16 +103,8 @@
         }
       </div>
 
-      @if (enviado()) {
-        <p class="aviso" role="status">
-          Formulario válido: código {{ formulario.controls.codigo.value }}, cantidad
-          {{ formulario.controls.cantidad.value }}, desde {{ formulario.controls.desde.value }} y
-          hasta {{ formulario.controls.hasta.value }}.
-        </p>
-      }
-
       <div class="acciones">
-        <button class="boton" type="submit">Validar solicitud</button>
+        <button class="boton" type="submit">Enviar solicitud</button>
         <a class="boton boton-secundario" routerLink="/equipos">Volver al inventario</a>
       </div>
     </form>

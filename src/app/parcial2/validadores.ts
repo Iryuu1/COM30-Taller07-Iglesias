@@ -5,6 +5,7 @@ export const M = 4;
 export const TOPE = 24;
 export const DESDE = 3;
 export const HASTA = 4;
+export const PATRON_CODIGO = /^[A-Z]{2}\d{3}$/;
 
 /** Valida que el valor sea un múltiplo exacto del número indicado. */
 export function multiploDe(multiplo: number): ValidatorFn {

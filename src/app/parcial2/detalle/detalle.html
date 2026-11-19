@@ -1,0 +1,58 @@
+<section class="pagina">
+  <nav class="migas" aria-label="Ruta de navegación">
+    <a routerLink="/parcial2">Parcial 2</a>
+    <span aria-hidden="true">/</span>
+    <span>Detalle</span>
+  </nav>
+
+  @if (valido()) {
+    <header class="encabezado-pagina">
+      <div>
+        <p class="eyebrow">Detalle de la solicitud</p>
+        <h1>{{ codigo() }}</h1>
+        <p class="descripcion">
+          Cálculos con m = {{ M }} y tope = {{ TOPE }}. La cantidad llega por el parámetro
+          <code>?cantidad=</code>.
+        </p>
+      </div>
+    </header>
+
+    <section class="panel" aria-label="Valores de la solicitud">
+      <div class="panel-cabecera">
+        <div>
+          <h2>Valores calculados</h2>
+          <p>Se muestran en el orden código, cantidad, bloques y margen.</p>
+        </div>
+      </div>
+
+      <dl class="detalle-grid">
+        <div class="dato">
+          <dt>Código</dt>
+          <dd>{{ codigo() }}</dd>
+        </div>
+        <div class="dato">
+          <dt>Cantidad</dt>
+          <dd>{{ cantidadSegura() }}</dd>
+        </div>
+        <div class="dato">
+          <dt>Bloques (cantidad / {{ M }})</dt>
+          <dd>{{ bloques() }}</dd>
+        </div>
+        <div class="dato">
+          <dt>Margen ({{ TOPE }} − cantidad)</dt>
+          <dd>{{ margen() }}</dd>
+        </div>
+      </dl>
+    </section>
+  } @else {
+    <section class="panel pagina-404" aria-live="polite">
+      <p class="codigo-404">!</p>
+      <h1>Código inválido</h1>
+      <p>
+        El código <code class="direccion">{{ codigo() }}</code> no tiene el formato de dos letras
+        mayúsculas y tres dígitos.
+      </p>
+      <a class="boton" routerLink="/parcial2">Volver al formulario</a>
+    </section>
+  }
+</section>

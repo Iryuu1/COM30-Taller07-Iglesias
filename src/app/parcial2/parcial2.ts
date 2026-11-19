@@ -1,6 +1,6 @@
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { EquipoApi } from '../services/equipo-api';
@@ -8,6 +8,7 @@ import {
   DESDE,
   HASTA,
   M,
+  PATRON_CODIGO,
   TOPE,
   hastaMayorQueDesde,
   multiploDe,
@@ -22,11 +23,11 @@ import {
 export class Parcial2 {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly equipoApi = inject(EquipoApi);
+  private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly M = M;
   protected readonly TOPE = TOPE;
-  protected readonly enviado = signal(false);
 
   protected readonly buscar = new FormControl('', { nonNullable: true });
   protected readonly ultimoValor = signal('');
@@ -50,10 +51,7 @@ export class Parcial2 {
 
   protected readonly formulario = this.fb.group(
     {
-      codigo: this.fb.control('', [
-        Validators.required,
-        Validators.pattern(/^[A-Z]{2}\d{3}$/),
-      ]),
+      codigo: this.fb.control('', [Validators.required, Validators.pattern(PATRON_CODIGO)]),
       cantidad: this.fb.control(1, [
         Validators.required,
         rangoEntre(1, TOPE),
@@ -92,13 +90,15 @@ export class Parcial2 {
   }
 
   protected enviar(): void {
-    this.enviado.set(false);
-
     if (this.formulario.invalid) {
       this.formulario.markAllAsTouched();
       return;
     }
 
-    this.enviado.set(true);
+    const { codigo, cantidad } = this.formulario.getRawValue();
+
+    void this.router.navigate(['/parcial2/detalle', codigo], {
+      queryParams: { cantidad },
+    });
   }
 }
