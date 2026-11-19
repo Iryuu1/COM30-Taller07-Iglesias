@@ -1,6 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
-import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs';
+import { EquipoApi } from '../services/equipo-api';
 import {
   DESDE,
   HASTA,
@@ -18,10 +21,32 @@ import {
 })
 export class Parcial2 {
   private readonly fb = inject(NonNullableFormBuilder);
+  private readonly equipoApi = inject(EquipoApi);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly M = M;
   protected readonly TOPE = TOPE;
   protected readonly enviado = signal(false);
+
+  protected readonly buscar = new FormControl('', { nonNullable: true });
+  protected readonly ultimoValor = signal('');
+  protected readonly emisiones = signal(0);
+
+  protected readonly equipos = this.equipoApi.equipos;
+  protected readonly visibles = computed(() => {
+    const termino = this.ultimoValor().toLowerCase();
+    const equipos = this.equipos();
+
+    if (!termino) {
+      return equipos;
+    }
+
+    return equipos.filter((equipo) =>
+      [equipo.codigo, equipo.tipo, equipo.ubicacion, equipo.estado].some((valor) =>
+        valor.toLowerCase().includes(termino),
+      ),
+    );
+  });
 
   protected readonly formulario = this.fb.group(
     {
@@ -39,6 +64,20 @@ export class Parcial2 {
     },
     { validators: hastaMayorQueDesde },
   );
+
+  constructor() {
+    this.buscar.valueChanges
+      .pipe(
+        debounceTime(300),
+        map((valor) => valor.trim()),
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((valor) => {
+        this.ultimoValor.set(valor);
+        this.emisiones.update((total) => total + 1);
+      });
+  }
 
   protected mostrarError(campo: 'codigo' | 'cantidad' | 'desde' | 'hasta'): boolean {
     const control = this.formulario.controls[campo];

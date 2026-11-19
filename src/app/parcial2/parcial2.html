@@ -117,4 +117,62 @@
       </div>
     </form>
   </section>
+
+  <section class="panel" aria-label="Búsqueda reactiva en el inventario">
+    <div class="panel-cabecera">
+      <div>
+        <h2>Buscar equipos</h2>
+        <p>La consulta se emite 300 ms después de dejar de escribir y no repite el valor anterior.</p>
+      </div>
+    </div>
+
+    <div class="formulario">
+      <div class="campo">
+        <label for="buscar">Buscar</label>
+        <input
+          id="buscar"
+          type="search"
+          [formControl]="buscar"
+          placeholder="Código, tipo, ubicación o estado"
+          autocomplete="off"
+        />
+        <p class="ayuda-campo">Último valor: {{ ultimoValor() }}</p>
+        <p class="ayuda-campo">Emisiones: {{ emisiones() }}</p>
+      </div>
+    </div>
+
+    <div class="tabla-scroll">
+      <table class="tabla-equipos">
+        <thead>
+          <tr>
+            <th scope="col">Código</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Ubicación</th>
+            <th scope="col">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (equipo of visibles(); track equipo.codigo) {
+            <tr>
+              <td>
+                <a class="enlace-fila" [routerLink]="['/equipos', equipo.codigo]">
+                  {{ equipo.codigo }}
+                </a>
+              </td>
+              <td>{{ equipo.tipo }}</td>
+              <td>{{ equipo.ubicacion }}</td>
+              <td>{{ equipo.estado }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td class="vacio" colspan="4">
+                <strong>0 equipos para «{{ ultimoValor() }}».</strong>
+                El listado se filtra con el último valor emitido.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
 </section>
